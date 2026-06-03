@@ -1,0 +1,137 @@
+/* ════════════════════════════════════════════════════════════════════
+   COMPOSANTS — indices, boutons de verdict, bannière de résultat, écran final
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── INDICES (révélés après le verdict) ── */
+.indices-section {
+  display: none;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1.5px dashed rgba(74,48,32,0.2);
+}
+.indices-section.revealed { display: block; animation: slideIn 0.3s ease; }
+.indices-label {
+  font-size: 10px; font-weight: 800; color: var(--muted);
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
+}
+.clues-strip { display: flex; gap: 7px; flex-wrap: wrap; }
+.clue-tag {
+  border-radius: 4px; padding: 4px 10px; font-size: 11px; font-weight: 700;
+}
+.clue-tag.suspicious { background: #fde8e6; color: var(--red-alert); border: 1px solid rgba(192,57,43,0.25); }
+.clue-tag.ok { background: #e6f4ec; color: var(--green-ok); border: 1px solid rgba(30,126,74,0.25); }
+
+/* ── BOUTONS DE VERDICT ── */
+.verdict-zone { display: none; gap: 12px; }
+.verdict-zone.visible { display: grid; grid-template-columns: 1fr 1fr; }
+.verdict-btn {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid;
+  border-radius: 8px;
+  padding: 14px 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px; font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: center;
+  letter-spacing: 0.3px;
+  color: var(--paper);
+}
+.verdict-btn.real { border-color: var(--green-ok); color: #8fe0b3; }
+.verdict-btn.fake { border-color: var(--red-alert); color: #f0a59c; }
+.verdict-btn.real:hover:not(:disabled) { background: rgba(30,126,74,0.18); transform: scale(1.02); }
+.verdict-btn.fake:hover:not(:disabled) { background: rgba(192,57,43,0.18); transform: scale(1.02); }
+.verdict-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.verdict-btn.selected-real { background: rgba(30,126,74,0.3); color: #fff; }
+.verdict-btn.selected-fake { background: rgba(192,57,43,0.3); color: #fff; }
+
+/* ── BANNIÈRE DE RÉSULTAT ── */
+.result-banner {
+  display: none;
+  background: var(--paper);
+  border-radius: 5px;
+  padding: 16px 20px;
+  box-shadow: 3px 4px 14px rgba(0,0,0,0.35);
+  border-left: 6px solid;
+  animation: slideIn 0.3s ease;
+}
+.result-banner.correct { border-color: var(--green-ok); }
+.result-banner.wrong { border-color: var(--red-alert); }
+.result-banner-title { font-size: 15px; font-weight: 800; margin-bottom: 8px; }
+.result-banner.correct .result-banner-title { color: var(--green-ok); }
+.result-banner.wrong .result-banner-title { color: var(--red-alert); }
+.result-explanation { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
+
+.next-btn {
+  display: inline-block;
+  margin-top: 14px;
+  background: var(--gold);
+  color: var(--wood-dark);
+  border: none; border-radius: 6px;
+  padding: 10px 22px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px; font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  letter-spacing: 0.5px;
+}
+.next-btn:hover { opacity: 0.88; transform: scale(1.02); }
+
+/* ── ÉCRAN FINAL ── */
+.final-screen {
+  background: var(--paper);
+  border-radius: 5px;
+  padding: 36px 26px;
+  text-align: center;
+  box-shadow: 3px 4px 20px rgba(0,0,0,0.45);
+  margin: 0 auto;
+}
+.final-big { font-size: 64px; margin-bottom: 12px; }
+.final-title { font-family: 'Special Elite', serif; font-size: 22px; color: var(--ink); margin-bottom: 8px; }
+.final-score { font-size: 42px; font-weight: 800; color: var(--gold-dim); margin-bottom: 14px; }
+.final-msg { font-size: 14px; color: var(--ink-mid); line-height: 1.7; max-width: 500px; margin: 0 auto 18px; }
+.final-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+
+/* ── RÉCAPITULATIF DES PIÈGES (écran final) ── */
+.trap-recap { text-align: left; margin: 6px auto 24px; max-width: 560px; }
+.recap-title {
+  font-family: 'Special Elite', serif; font-size: 15px; color: var(--ink);
+  text-align: center; margin-bottom: 4px;
+}
+.recap-sub { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 14px; }
+.recap-clean {
+  background: #e6f4ec; border: 1px solid rgba(30,126,74,0.25); border-radius: 6px;
+  padding: 16px; color: var(--green-ok); font-weight: 700; font-size: 13px; text-align: center;
+}
+.recap-item {
+  border-left: 5px solid; border-radius: 5px;
+  padding: 12px 14px; margin-bottom: 12px; background: #faf6ea;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.recap-item.is-fake { border-color: var(--red-alert); }
+.recap-item.is-real { border-color: var(--green-ok); }
+.recap-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.recap-icon { font-size: 18px; }
+.recap-source { font-weight: 800; font-size: 13px; color: var(--ink); flex: 1; }
+.recap-tag { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+.recap-item.is-fake .recap-tag { color: var(--red-alert); }
+.recap-item.is-real .recap-tag { color: var(--green-ok); }
+.recap-affaire { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.recap-verdict { font-size: 12px; font-weight: 700; color: var(--ink-mid); margin-bottom: 6px; }
+.recap-clues { margin: 0 0 8px 18px; padding: 0; }
+.recap-clues li { font-size: 12px; color: var(--ink-mid); line-height: 1.5; margin-bottom: 2px; }
+.recap-why { font-size: 12.5px; color: var(--ink-mid); line-height: 1.6; font-style: italic; }
+
+.btn-primary, .btn-secondary {
+  border: none; border-radius: 6px;
+  padding: 12px 24px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px; font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  letter-spacing: 0.5px;
+}
+.btn-primary { background: var(--ink); color: var(--gold); }
+.btn-primary:hover { opacity: 0.85; transform: scale(1.02); }
+.btn-secondary { background: var(--gold); color: var(--wood-dark); }
+.btn-secondary:hover { opacity: 0.85; transform: scale(1.02); }

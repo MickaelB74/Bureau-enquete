@@ -1,0 +1,17 @@
+{
+  "name": "bureau-enquete-numerique",
+  "version": "2.0.0",
+  "description": "Jeu éducatif d'éducation aux médias : apprendre à distinguer vraies infos et fake news en analysant des sources réalistes (TikTok, site web, journal, WhatsApp...).",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "license": "MIT"
+}

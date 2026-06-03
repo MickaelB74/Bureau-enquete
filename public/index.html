@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bureau d'Enquête Numérique — Démasque les Fake News</title>
+  <meta name="description" content="Jeu éducatif d'éducation aux médias : apprends à distinguer vraies infos et fake news en analysant des sources réalistes (TikTok, site web, journal, WhatsApp, Instagram, X, YouTube...).">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Feuilles de style séparées par responsabilité -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/platforms.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div class="desk">
+
+    <!-- ══════════════ ÉCRAN 1 — MENU / CHOIX DE L'AFFAIRE ══════════════ -->
+    <section class="screen" id="screen-menu">
+      <div class="screen-inner">
+        <div class="header">
+          <div class="header-title">🕵️ Bureau d'Enquête Numérique</div>
+          <div class="header-sub">Démasque les fake news, dossier après dossier</div>
+        </div>
+
+        <div class="menu-intro">
+          Bienvenue, détective ! Résous les <strong>affaires dans l'ordre</strong> :
+          chacune se débloque en terminant la précédente. Pour chaque affaire, tu
+          examineras plusieurs sources (TikTok, sites, journaux, WhatsApp…) et tu
+          décideras : <strong>vraie info</strong> ou <strong>fake news</strong> ?
+          Attention au piège du « tout est faux » : certaines affaires contiennent
+          autant de vraies infos que de fausses.
+        </div>
+
+        <!-- Scoreboard global sur l'enchaînement des affaires -->
+        <div class="global-scoreboard">
+          <div class="gs-row">
+            <span class="gs-label">🏅 Score global</span>
+            <span class="gs-value" id="gs-score">0 / 0</span>
+          </div>
+          <div class="gs-bar"><div class="gs-bar-fill" id="gs-bar-fill"></div></div>
+          <div class="gs-row">
+            <span class="gs-label">📂 Affaires résolues</span>
+            <span class="gs-value" id="gs-solved">0 / 0</span>
+          </div>
+          <button class="btn-secondary gs-bilan" id="view-bilan" type="button" style="display:none;">🏁 Voir le bilan final</button>
+          <button class="gs-reset" id="reset-progress" type="button">Réinitialiser la progression</button>
+        </div>
+
+        <div class="level-grid" id="level-grid"><!-- rempli par game.js --></div>
+      </div>
+    </section>
+
+    <!-- ══════════════ ÉCRAN 2 — JEU ══════════════ -->
+    <section class="screen" id="screen-game">
+      <div class="screen-inner">
+        <div class="game-topbar">
+          <button class="ghost-btn" id="back-to-menu" type="button">← Choisir une autre affaire</button>
+          <div class="affaire-title" id="affaire-title"></div>
+        </div>
+
+        <div class="scorebar">
+          <div class="score-pill">🔍 Score : <span id="score">0</span> / <span id="total">0</span></div>
+          <div class="progress-dots" id="progress-dots"></div>
+        </div>
+
+        <div class="mission-card">
+          <div class="mission-label">⚠ Dossier d'enquête</div>
+          <div class="mission-text" id="mission-text"></div>
+        </div>
+
+        <div class="main-layout">
+          <!-- Sources / appareils à consulter -->
+          <div class="devices-sidebar" id="devices-sidebar"></div>
+
+          <!-- Contenu + verdict -->
+          <div class="content-area">
+            <div class="evidence-panel">
+              <div class="welcome-state" id="welcome-state">
+                <div class="welcome-icon">🗂️</div>
+                <div class="welcome-title">Commence l'enquête !</div>
+                <div class="welcome-desc">Clique sur une source à gauche pour l'examiner et décider : vraie info ou fake news ?</div>
+              </div>
+              <div id="source-content" style="display:none;"></div>
+            </div>
+
+            <div class="verdict-zone" id="verdict-zone">
+              <button class="verdict-btn real" id="btn-real" type="button">✅ C'est une vraie info</button>
+              <button class="verdict-btn fake" id="btn-fake" type="button">❌ C'est une fake news</button>
+            </div>
+
+            <div class="result-banner" id="result-banner">
+              <div class="result-banner-title" id="result-title"></div>
+              <div class="result-explanation" id="result-explanation"></div>
+              <button class="next-btn" id="next-btn" type="button">Source suivante →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ ÉCRAN 3 — FIN D'AFFAIRE ══════════════ -->
+    <section class="screen" id="screen-final">
+      <div class="screen-inner">
+        <div class="final-screen">
+          <div class="final-big" id="final-icon">🏆</div>
+          <div class="final-title" id="final-title">Enquête terminée !</div>
+          <div class="final-score" id="final-score">0 / 0</div>
+          <div class="final-msg" id="final-msg"></div>
+          <div class="trap-recap" id="trap-recap"><!-- récapitulatif des pièges de l'affaire --></div>
+          <div class="final-actions">
+            <button class="btn-secondary" id="next-level-btn" type="button">Affaire suivante →</button>
+            <button class="btn-primary" id="to-menu-btn" type="button">🗂️ Toutes les affaires</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ ÉCRAN 4 — BILAN FINAL (toutes affaires résolues) ══════════════ -->
+    <section class="screen" id="screen-complete">
+      <div class="screen-inner">
+        <div class="final-screen">
+          <div class="final-big">🏁</div>
+          <div class="final-title">Enquête bouclée, détective !</div>
+          <div class="header-sub" style="color:var(--muted);margin-bottom:6px;">Toutes les affaires sont résolues</div>
+          <div class="final-score" id="bilan-score">0 / 0</div>
+          <div class="final-msg" id="bilan-msg"></div>
+          <div class="trap-recap" id="bilan-recap"><!-- tous les points-pièges --></div>
+          <div class="final-actions">
+            <button class="btn-primary" id="bilan-menu-btn" type="button">🗂️ Retour au menu</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Scripts : données → rendu → logique (ordre important) -->
+  <script src="js/levels.js"></script>
+  <script src="js/platforms.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Blueprint Render.com — Site statique
+# Déploiement : connectez ce dépôt sur https://dashboard.render.com → "New" → "Blueprint"
+# Render lira ce fichier automatiquement.
+services:
+  - type: web
+    name: bureau-enquete-numerique
+    runtime: static
+    # Aucune compilation nécessaire : ce sont des fichiers statiques (HTML/CSS/JS).
+    buildCommand: ""
+    # Dossier publié à la racine du site.
+    staticPublishPath: ./public
+    # Toute URL inconnue retombe sur l'index (utile si on ajoute du routage plus tard).
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff

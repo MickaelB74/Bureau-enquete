@@ -1,0 +1,261 @@
+/* ════════════════════════════════════════════════════════════════════
+   LAYOUT — menu, en-têtes, barre de score, mission, grille de jeu
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── EN-TÊTE GÉNÉRAL ── */
+.header { text-align: center; margin-bottom: 22px; }
+.header-title {
+  font-family: 'Special Elite', serif;
+  color: var(--gold);
+  font-size: clamp(20px, 3.4vw, 30px);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow: 0 0 30px rgba(245, 200, 66, 0.3);
+  margin-bottom: 6px;
+}
+.header-sub {
+  font-size: 12px;
+  color: var(--gold-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+/* ── MENU : grille des affaires ── */
+.menu-intro {
+  background: var(--paper);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin-bottom: 22px;
+  border-left: 5px solid var(--gold-dim);
+  box-shadow: 3px 4px 14px rgba(0,0,0,0.4);
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 1.6;
+}
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.level-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  background: var(--paper);
+  border: none;
+  border-top: 4px solid var(--red-alert);
+  border-radius: 6px;
+  padding: 18px 16px 16px;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  box-shadow: 3px 5px 16px rgba(0,0,0,0.45);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+.level-card:hover {
+  transform: translateY(-4px) rotate(-0.4deg);
+  box-shadow: 4px 8px 22px rgba(0,0,0,0.55);
+}
+.level-num {
+  font-size: 10px; font-weight: 800; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--red-alert);
+}
+.level-emoji { font-size: 42px; line-height: 1; }
+.level-title {
+  font-family: 'Special Elite', serif;
+  font-size: 16px; color: var(--ink);
+}
+.level-theme { font-size: 12px; color: var(--muted); line-height: 1.4; min-height: 32px; }
+.level-meta {
+  margin-top: 6px; padding-top: 8px;
+  border-top: 1px dashed rgba(74,48,32,0.25);
+  width: 100%;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.level-stars { color: var(--gold-dim); font-size: 14px; letter-spacing: 2px; }
+.level-ratio { font-size: 10px; color: var(--muted); }
+.level-best { font-size: 10px; color: var(--green-ok); font-weight: 800; }
+
+/* Affaire terminée / verrouillée */
+.level-card.done { border-top-color: var(--green-ok); }
+.level-card.locked {
+  cursor: not-allowed;
+  filter: grayscale(0.55);
+  opacity: 0.72;
+  border-top-color: var(--muted);
+}
+.level-card.locked:hover { transform: none; box-shadow: 3px 5px 16px rgba(0,0,0,0.45); }
+
+/* ── SCOREBOARD GLOBAL (menu) ── */
+.global-scoreboard {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--wood-grain);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 22px;
+}
+.gs-row { display: flex; align-items: center; justify-content: space-between; margin: 3px 0; }
+.gs-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--gold-dim);
+}
+.gs-value { font-family: 'Special Elite', serif; color: var(--gold); font-size: 16px; }
+.gs-bar {
+  height: 8px; background: var(--wood-grain);
+  border-radius: 5px; overflow: hidden; margin: 8px 0 10px;
+}
+.gs-bar-fill {
+  height: 100%; width: 0;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+  transition: width 0.5s ease;
+}
+.gs-reset {
+  margin-top: 6px; background: none; border: none;
+  color: var(--muted); font-size: 11px; cursor: pointer;
+  text-decoration: underline; font-family: 'Nunito', sans-serif;
+}
+.gs-reset:hover { color: var(--red-alert); }
+
+/* ── BARRE D'ACTIONS (retour) ── */
+.game-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px; gap: 12px;
+}
+.affaire-title {
+  font-family: 'Special Elite', serif;
+  color: var(--gold);
+  font-size: clamp(14px, 2.2vw, 18px);
+  letter-spacing: 1px;
+}
+.ghost-btn {
+  background: rgba(245,200,66,0.08);
+  border: 1px solid rgba(245,200,66,0.35);
+  color: var(--gold);
+  border-radius: 18px;
+  padding: 6px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px; font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.ghost-btn:hover { background: rgba(245,200,66,0.18); }
+
+/* ── BARRE DE SCORE ── */
+.scorebar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.score-pill {
+  font-family: 'Special Elite', serif;
+  background: rgba(245,200,66,0.1);
+  border: 1px solid rgba(245,200,66,0.35);
+  border-radius: 20px;
+  padding: 5px 16px;
+  color: var(--gold);
+  font-size: 14px; letter-spacing: 1px;
+}
+.progress-dots { display: flex; gap: 8px; align-items: center; }
+.dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--wood-grain);
+  border: 1px solid rgba(245,200,66,0.2);
+  transition: all 0.3s;
+}
+.dot.done { background: var(--green-ok); border-color: var(--green-ok); }
+.dot.current { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 8px rgba(245,200,66,0.5); }
+
+/* ── CARTE MISSION ── */
+.mission-card {
+  background: var(--paper);
+  border-radius: 3px;
+  padding: 12px 18px;
+  margin-bottom: 22px;
+  border-left: 5px solid var(--red-alert);
+  box-shadow: 3px 4px 14px rgba(0,0,0,0.5), inset 0 0 30px rgba(0,0,0,0.04);
+  transform: rotate(-0.3deg);
+}
+.mission-label {
+  font-size: 9px; font-weight: 800;
+  color: var(--red-alert); letter-spacing: 3px; text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.mission-text { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+/* ── GRILLE PRINCIPALE ── */
+.main-layout {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+/* Barre latérale des sources/appareils */
+.devices-sidebar { display: flex; flex-direction: column; gap: 12px; }
+.device-card {
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid var(--wood-grain);
+  border-radius: 10px;
+  padding: 14px 12px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, background 0.2s;
+  position: relative;
+  text-align: center;
+  user-select: none;
+}
+.device-card:hover:not(.done) {
+  border-color: var(--gold);
+  background: rgba(245,200,66,0.06);
+  transform: translateY(-2px);
+}
+.device-card.active {
+  border-color: var(--gold);
+  background: rgba(245,200,66,0.09);
+  box-shadow: 0 0 0 3px rgba(245,200,66,0.15);
+}
+.device-card.done { opacity: 0.55; cursor: default; }
+.device-emoji { font-size: 28px; display: block; margin-bottom: 6px; }
+.device-name {
+  font-size: 11px; font-weight: 700;
+  color: var(--gold); letter-spacing: 1px; text-transform: uppercase;
+}
+.device-source { font-size: 10px; color: var(--muted); margin-top: 2px; word-break: break-word; }
+.done-badge {
+  position: absolute; top: -7px; right: -7px;
+  background: var(--green-ok); color: #fff;
+  font-size: 10px; font-weight: 800;
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Zone de contenu */
+.content-area { display: flex; flex-direction: column; gap: 14px; }
+
+/* Panneau "dossier" qui contient la source */
+.evidence-panel {
+  background: var(--paper);
+  border-radius: 5px;
+  padding: 18px;
+  box-shadow: 3px 4px 20px rgba(0,0,0,0.45), inset 0 0 40px rgba(0,0,0,0.03);
+  min-height: 260px;
+  position: relative;
+}
+
+/* État d'accueil du panneau */
+.welcome-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  min-height: 230px; gap: 14px;
+}
+.welcome-icon { font-size: 48px; }
+.welcome-title { font-family: 'Special Elite', serif; font-size: 16px; color: var(--ink-mid); }
+.welcome-desc { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 340px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 680px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .devices-sidebar { flex-direction: row; overflow-x: auto; padding-bottom: 4px; }
+  .device-card { min-width: 116px; flex-shrink: 0; }
+}

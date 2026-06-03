@@ -1,0 +1,84 @@
+/* ════════════════════════════════════════════════════════════════════
+   THÈME — variables de couleurs, réinitialisation, fond "bureau d'enquête"
+   ════════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Bois du bureau */
+  --wood-dark: #1c1005;
+  --wood-mid: #2e1a08;
+  --wood-light: #3d2410;
+  --wood-grain: #4a2e10;
+  /* Accents */
+  --gold: #f5c842;
+  --gold-dim: #c9a030;
+  /* Papier */
+  --paper: #f5efdf;
+  --paper-dark: #e8dfc0;
+  /* Encre */
+  --ink: #1e120a;
+  --ink-mid: #4a3020;
+  /* Sémantique */
+  --red-alert: #c0392b;
+  --green-ok: #1e7e4a;
+  --muted: #7a6040;
+  /* Couleurs de marque des plateformes (mode RP) */
+  --tiktok: #fe2c55;
+  --tiktok-cyan: #25f4ee;
+  --whatsapp: #25d366;
+  --whatsapp-bg: #e5ddd5;
+  --instagram: #c13584;
+  --twitter: #1d9bf0;
+  --youtube: #ff0000;
+  --facebook: #1877f2;
+}
+
+html, body {
+  height: 100%;
+  background: var(--wood-dark);
+  font-family: 'Nunito', system-ui, sans-serif;
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* Halo de lampe au-dessus du bureau */
+body::before {
+  content: '';
+  position: fixed;
+  top: -120px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 500px;
+  background: radial-gradient(ellipse at 50% 10%, rgba(255, 210, 80, 0.13) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Texture de bureau en bois */
+.desk {
+  min-height: 100vh;
+  background:
+    repeating-linear-gradient(92deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 40px),
+    repeating-linear-gradient(180deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 1px, transparent 1px, transparent 60px),
+    linear-gradient(160deg, #2c1a08 0%, #3a2210 35%, #281508 70%, #1e1006 100%);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 20px 48px;
+}
+
+/* Animation d'apparition partagée */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Gestion des écrans (menu / jeu / fin) */
+.screen { display: none; width: 100%; }
+.screen.visible { display: block; animation: slideIn 0.35s ease; }
+.screen-inner {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+}

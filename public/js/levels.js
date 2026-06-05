@@ -155,300 +155,306 @@ const LEVELS = [
   },
 
   /* ════════════════════════════════════════════════════════════════════
-     AFFAIRE 2 — TEMPÊTE SUR LA VILLE   (Facile · 2 fake / 2 vrai)
+     AFFAIRE 2 — L'ALIMENT MIRACLE   (Facile · 2 fake / 2 vrai)
      ════════════════════════════════════════════════════════════════════ */
   {
-    id: 'tempete',
+    id: 'alimentation',
     number: 2,
-    emoji: '🌪️',
-    title: 'Tempête sur la Ville',
+    emoji: '🥦',
+    title: 'L\'Aliment Miracle',
     difficulty: 2,
-    theme: 'Alerte météo : panique ou vraie information ?',
+    theme: 'Bien manger : info fiable ou intox ?',
     mission:
-      'Une grosse tempête est annoncée. Sur les réseaux, tout le monde partage des ' +
-      'alertes… mais lesquelles sont fiables ? Attention : ici, il y a autant de ' +
-      'vraies infos que de fausses. Ne tombe pas dans le piège du « tout est faux » !',
+      'Sur les réseaux, on parle beaucoup d\'alimentation : aliments « miracles », ' +
+      'jus « détox », aliments soi-disant « dangereux »… Mais lesquelles de ces infos ' +
+      'sont fiables ? Attention : ici, il y a autant de vraies infos que de fausses. ' +
+      'Ne tombe pas dans le piège du « tout est faux » !',
     sources: [
+      {
+        platform: 'tiktok',
+        isFake: true,
+        shortLabel: '@miss.detox',
+        data: {
+          handle: '@miss.detox',
+          displayName: 'Miss Détox ✨',
+          followers: '780 k',
+          videoCaption: 'Une influenceuse prépare un jus vert et pose à côté d\'une balance',
+          caption:
+            'Buvez CE jus détox chaque matin et éliminez TOUTES vos toxines ! -5 kg en ' +
+            '1 semaine SANS effort 🥤🔥 Lien de ma boutique en bio ! #detox #mincir',
+          sound: '🎵 musique motivante',
+          likes: '610 k',
+          comments: '23 000',
+          shares: '88 000'
+        },
+        clues: [
+          { text: '« Éliminer toutes les toxines » : le corps le fait déjà (foie, reins)', suspicious: true },
+          { text: '« -5 kg en 1 semaine sans effort » — promesse irréaliste', suspicious: true },
+          { text: 'Vend un produit (« lien boutique en bio »)', suspicious: true },
+          { text: 'Aucun diététicien ni étude scientifique cité', suspicious: true }
+        ],
+        explanation:
+          'C\'est une fake news ! Le mot « détox » est surtout un argument marketing : ' +
+          'le corps élimine déjà naturellement ses déchets grâce au foie et aux reins. ' +
+          'Perdre « 5 kg en une semaine sans effort » est irréaliste, et le vrai but est ' +
+          'de te vendre un produit. Une info nutrition fiable vient d\'un diététicien ou ' +
+          'd\'une source officielle, pas d\'une boutique en ligne.'
+      },
       {
         platform: 'twitter',
         isFake: false,
-        shortLabel: '@meteofrance',
+        shortLabel: '@MangerBouger',
         data: {
-          handle: '@meteofrance',
-          displayName: 'Météo-France',
+          handle: '@MangerBouger',
+          displayName: 'Manger Bouger (Santé publique France)',
           verified: true,
-          time: '8:02 · Aujourd\'hui',
+          time: '9:30 · Aujourd\'hui',
           text:
-            '🟠 Vigilance ORANGE vents violents pour 12 départements à partir de 18h. ' +
-            'Rafales attendues jusqu\'à 110 km/h sur le littoral. Limitez vos ' +
-            'déplacements. Infos officielles : vigilance.meteofrance.fr',
-          comments: '1 204',
-          retweets: '8 900',
-          likes: '23 400',
-          views: '3,1 M'
+            'Rappel 🍎🥕 Pas besoin d\'aliment « miracle » : l\'équilibre vient de la ' +
+            'variété. Visez au moins 5 fruits et légumes par jour, limitez le sucre et ' +
+            'bougez un peu chaque jour. Conseils officiels : mangerbouger.fr',
+          comments: '420',
+          retweets: '3 100',
+          likes: '12 800',
+          views: '1,4 M'
         },
         clues: [
-          { text: 'Compte officiel certifié de Météo-France', suspicious: false },
-          { text: 'Niveau de vigilance précis (orange) et chiffré', suspicious: false },
-          { text: 'Lien vers le site officiel de vigilance', suspicious: false },
-          { text: 'Ton mesuré, conseils de prudence concrets', suspicious: false }
+          { text: 'Compte officiel et certifié de Santé publique France', suspicious: false },
+          { text: 'Conseils mesurés, sans promesse miracle', suspicious: false },
+          { text: 'Renvoie vers le site officiel mangerbouger.fr', suspicious: false },
+          { text: 'Met en avant la variété, pas un produit à vendre', suspicious: false }
         ],
         explanation:
-          'C\'est une vraie info ! Elle vient du compte officiel et certifié de ' +
-          'Météo-France, donne un niveau de vigilance précis, des chiffres réalistes ' +
-          'et renvoie vers le site officiel. Le ton est calme : on informe, on ne ' +
-          'cherche pas à effrayer.'
+          'C\'est une vraie info ! « Manger Bouger » est le programme officiel de Santé ' +
+          'publique France. Le message est prudent, ne vend rien et renvoie vers un site ' +
+          'officiel. La nutrition fiable parle d\'équilibre et de variété, jamais ' +
+          'd\'aliment « magique ».'
+      },
+      {
+        platform: 'newspaper',
+        isFake: false,
+        shortLabel: '60 Millions',
+        data: {
+          name: '60 Millions de consommateurs',
+          section: 'Alimentation',
+          publishedAt: 'Publié cette semaine',
+          headline: 'Aliments ultra-transformés : pourquoi mieux vaut en limiter la consommation',
+          byline: 'Par la rédaction, avec des nutritionnistes',
+          body:
+            'Plusieurs études convergent : manger beaucoup d\'aliments ultra-transformés ' +
+            '(plats préparés, sodas, biscuits industriels) est associé à des risques pour ' +
+            'la santé. Les experts recommandent d\'en réduire la part, sans diaboliser un ' +
+            'aliment en particulier. Cuisiner des produits bruts reste un bon réflexe.',
+          imageCaption: '📷 Comparaison d\'étiquettes de produits alimentaires',
+          sourceNote: '✔️ Magazine de consommateurs · ✔️ Nutritionnistes cités'
+        },
+        clues: [
+          { text: 'Magazine de consommateurs reconnu et indépendant', suspicious: false },
+          { text: 'S\'appuie sur plusieurs études qui concordent', suspicious: false },
+          { text: 'Reste nuancé : « sans diaboliser un aliment »', suspicious: false },
+          { text: 'Donne un conseil concret et raisonnable', suspicious: false }
+        ],
+        explanation:
+          'C\'est une vraie info ! Un magazine reconnu s\'appuie sur plusieurs études qui ' +
+          'vont dans le même sens et reste nuancé : il conseille de limiter, sans affoler ' +
+          'ni interdire. Cette prudence (« sans diaboliser ») est la marque d\'une ' +
+          'information sérieuse.'
       },
       {
         platform: 'facebook',
         isFake: true,
         shortLabel: 'Page virale',
         data: {
-          pageName: 'Alerte Catastrophes France 🚨',
-          time: 'il y a 1 h',
+          pageName: 'Santé Naturelle & Vérité 🌿',
+          time: 'il y a 3 h',
           text:
-            '🚨🚨 OURAGAN DE FORCE 5 SUR LA FRANCE CE SOIR ! Des vents de 350 km/h vont ' +
-            'TOUT détruire ! Le gouvernement vous CACHE la vérité. PARTAGEZ pour sauver ' +
-            'des vies !! 😱',
-          imageCaption: '🖼️ Image d\'un ouragan… prise en Floride en 2017 (réutilisée)',
-          likes: '42 000',
-          comments: '9 100',
-          shares: '210 000'
+            '⚠️ ATTENTION ! Le four à micro-ondes DÉTRUIT 100% des nutriments et rend ' +
+            'votre nourriture CANCÉRIGÈNE ! L\'industrie vous le cache. Jetez-le ' +
+            'aujourd\'hui et PARTAGEZ pour sauver vos proches !! 😱',
+          imageCaption: '🖼️ Image d\'un micro-ondes barré d\'une grosse croix rouge',
+          likes: '15 000',
+          comments: '3 200',
+          shares: '47 000'
         },
         clues: [
-          { text: '350 km/h en France : impossible, irréaliste', suspicious: true },
-          { text: 'Photo réutilisée d\'un autre pays et d\'une autre année', suspicious: true },
-          { text: '« Le gouvernement vous cache » — complot', suspicious: true },
-          { text: '« Partagez pour sauver des vies » — chantage émotionnel', suspicious: true }
+          { text: '« Détruit 100% des nutriments » — faux et exagéré', suspicious: true },
+          { text: '« Rend la nourriture cancérigène » — affirmation sans preuve', suspicious: true },
+          { text: '« L\'industrie vous le cache » — théorie du complot', suspicious: true },
+          { text: '« Partagez pour sauver vos proches » — chantage émotionnel', suspicious: true }
         ],
         explanation:
-          'C\'est une fake news ! Les chiffres sont délirants (350 km/h n\'existe pas en ' +
-          'France), l\'image est volée à une autre catastrophe, et on retrouve le combo ' +
-          'classique : complot + appel à partager dans l\'urgence. Une vraie alerte ' +
-          'météo vient de Météo-France, pas d\'une page anonyme.'
-      },
-      {
-        platform: 'newspaper',
-        isFake: false,
-        shortLabel: 'Ouest-France',
-        data: {
-          name: 'Ouest-France',
-          section: 'Météo · Région',
-          publishedAt: 'Mis à jour aujourd\'hui à 12 h 10',
-          headline: 'Tempête attendue ce soir : les écoles fermeront plus tôt dans 3 départements',
-          byline: 'Par la rédaction régionale, avec AFP',
-          body:
-            'La préfecture a annoncé la fermeture anticipée des établissements scolaires ' +
-            'à 16 h dans trois départements placés en vigilance orange. Les transports ' +
-            'scolaires sont suspendus pour la soirée. La mesure est préventive, précise ' +
-            'la préfecture.',
-          imageCaption: '📷 Communiqué officiel de la préfecture',
-          sourceNote: '✔️ Décision préfectorale · ✔️ Source AFP'
-        },
-        clues: [
-          { text: 'Journal régional connu, info reprise de l\'AFP', suspicious: false },
-          { text: 'Décision officielle d\'une préfecture', suspicious: false },
-          { text: 'Mesure concrète et proportionnée', suspicious: false },
-          { text: 'Aucune dramatisation, juste des faits', suspicious: false }
-        ],
-        explanation:
-          'C\'est une vraie info ! Un journal régional reconnu relaie une décision ' +
-          'officielle de la préfecture, confirmée par l\'AFP (une agence de presse). ' +
-          'La mesure est concrète et raisonnable. Pas de panique inutile : juste de ' +
-          'l\'information de service.'
-      },
-      {
-        platform: 'whatsapp',
-        isFake: true,
-        shortLabel: 'Message viral',
-        data: {
-          groupName: 'Voisins du quartier 🏘️',
-          sender: 'Numéro inconnu',
-          forwardedCount: '5 600',
-          time: '13:22',
-          message:
-            'Un policier ami m\'a prévenu : la tempête va couper l\'électricité pendant ' +
-            '2 SEMAINES dans toute la région. Faites des réserves d\'eau et d\'essence ' +
-            'MAINTENANT avant la ruée. Ne le dites pas trop fort 🤫 Transférez vite !'
-        },
-        clues: [
-          { text: 'Source vague : « un policier ami »', suspicious: true },
-          { text: '2 semaines de coupure : invraisemblable', suspicious: true },
-          { text: 'Crée une ruée (eau, essence) = comportement dangereux', suspicious: true },
-          { text: '« Ne le dites pas trop fort » + « transférez » = manipulation', suspicious: true }
-        ],
-        explanation:
-          'C\'est une fake news ! La source est invérifiable (« un policier ami »), la ' +
-          'durée annoncée est absurde, et le message pousse à des achats de panique ' +
-          'dangereux. Le « ne le dites pas trop fort » est une astuce pour donner ' +
-          'l\'impression d\'une info secrète et précieuse. C\'est manipulateur.'
+          'C\'est une fake news ! Le micro-ondes chauffe les aliments, il ne les rend pas ' +
+          '« cancérigènes » et ne détruit pas tous les nutriments (toute cuisson en ' +
+          'modifie un peu, même la casserole). Le combo « l\'industrie vous le cache » + ' +
+          '« partagez pour sauver vos proches » est typique de l\'intox. Les agences ' +
+          'sanitaires confirment que le micro-ondes est sûr.'
       }
     ]
   },
 
   /* ════════════════════════════════════════════════════════════════════
-     AFFAIRE 3 — LA STAR DÉMASQUÉE   (Moyen · 4 fake / 1 vrai)
+     AFFAIRE 3 — ÉLAN DE SOLIDARITÉ   (Moyen · 4 fake / 1 vrai)
      ════════════════════════════════════════════════════════════════════ */
   {
-    id: 'star',
+    id: 'solidarite',
     number: 3,
-    emoji: '🎤',
-    title: 'La Star Démasquée',
+    emoji: '🤝',
+    title: 'Élan de Solidarité',
     difficulty: 3,
-    theme: 'Rumeurs autour d\'une célébrité',
+    theme: 'Vivre ensemble : la force de l\'entraide',
     mission:
-      'La chanteuse Léa Solène fait le buzz : rumeurs, fausses citations, deepfakes… ' +
-      'Tout circule très vite. Sauras-tu retrouver la seule information réellement ' +
-      'fiable au milieu des intox ?',
+      'Après de fortes inondations, un magnifique élan de solidarité se met en place ' +
+      'pour aider les habitants touchés. Mais des arnaqueurs profitent de la générosité ' +
+      'de tous pour piéger les gens. Protège l\'entraide : repère les fausses ' +
+      'sollicitations et retrouve le seul appel vraiment fiable.',
     sources: [
+      {
+        platform: 'facebook',
+        isFake: true,
+        shortLabel: 'Fausse cagnotte',
+        data: {
+          pageName: 'Solidarité Inondations 💔',
+          time: 'il y a 1 h',
+          text:
+            '😢 La petite Léna a TOUT perdu dans les inondations ! Aidez-la : envoyez ' +
+            'votre don directement sur notre compte personnel (RIB en message privé). ' +
+            'Chaque minute compte, ne réfléchissez pas, DONNEZ MAINTENANT !',
+          imageCaption: '🖼️ Photo d\'une maison inondée (déjà vue ailleurs sur le web)',
+          likes: '6 300',
+          comments: '410',
+          shares: '12 000'
+        },
+        clues: [
+          { text: 'Demande d\'envoyer l\'argent sur un « compte personnel »', suspicious: true },
+          { text: 'Aucune association identifiée, aucune transparence', suspicious: true },
+          { text: 'Histoire très émouvante pour court-circuiter la réflexion', suspicious: true },
+          { text: '« Ne réfléchissez pas, donnez maintenant » — fausse urgence', suspicious: true }
+        ],
+        explanation:
+          'C\'est une fake news (et une arnaque) ! La vraie générosité mérite mieux : ici, ' +
+          'on te pousse à virer de l\'argent sur un compte personnel, sans association ' +
+          'identifiée ni transparence, en jouant sur l\'émotion et l\'urgence. Pour aider ' +
+          'vraiment, on passe par un organisme connu qui rend des comptes.'
+      },
+      {
+        platform: 'whatsapp',
+        isFake: true,
+        shortLabel: 'Chaîne virale',
+        data: {
+          groupName: 'On s\'entraide 💛',
+          sender: 'Numéro inconnu',
+          forwardedCount: '8 700',
+          time: '19:48',
+          message:
+            'Pour CHAQUE partage de ce message, un repas chaud sera offert aux sinistrés ' +
+            '🙏 Transférez à 10 personnes minimum ! Ceux qui ignorent ce message n\'ont ' +
+            'pas de cœur… 💔'
+        },
+        clues: [
+          { text: 'Partager un message ne donne aucun repas à personne', suspicious: true },
+          { text: 'Aucune organisation derrière la promesse', suspicious: true },
+          { text: '« Pas de cœur » — chantage affectif pour culpabiliser', suspicious: true },
+          { text: 'Chaîne à transférer « à 10 personnes » = viralité', suspicious: true }
+        ],
+        explanation:
+          'C\'est une fake news ! Un simple partage ne se transforme jamais en repas ou ' +
+          'en don : aucune organisation n\'est derrière. Ces chaînes utilisent la ' +
+          'culpabilité (« pas de cœur ») pour se propager. Aider, ce n\'est pas cliquer ' +
+          'sur « transférer » : c\'est passer par une vraie action solidaire.'
+      },
       {
         platform: 'instagram',
         isFake: true,
-        shortLabel: 'Faux compte',
+        shortLabel: 'Fausse asso',
         data: {
-          handle: '@lea.solene.officiel.real',
-          displayName: 'Léa Solène 💎 (FAN compte)',
+          handle: '@coeurs.solidaires.dons',
+          displayName: 'Cœurs Solidaires',
           verified: false,
-          imageCaption: '🖼️ Photo de Léa visiblement retouchée (montage)',
+          imageCaption: '🖼️ Gros plan sur une liasse de billets',
           caption:
-            'Léa annonce qu\'elle ARRÊTE la musique pour toujours 😭💔 Likez si vous êtes ' +
-            'triste ! (compte non officiel mais infos sûres à 100%)',
-          likes: '320 000',
-          comments: '54 000',
-          time: 'il y a 4 h'
+            'On récolte des ESPÈCES pour les sinistrés 💸 Donnez en main propre à nos ' +
+            'bénévoles en gilet jaune dans la rue. On ne donne pas de reçu, on va vite, ' +
+            'faites confiance !',
+          likes: '2 800',
+          comments: '160',
+          time: 'il y a 5 h'
         },
         clues: [
-          { text: 'Pseudo douteux avec « real » et « officiel » en trop', suspicious: true },
-          { text: 'Pas de badge de certification', suspicious: true },
-          { text: '« Compte non officiel mais infos sûres à 100% » = contradiction', suspicious: true },
-          { text: 'Photo retouchée / montage', suspicious: true }
+          { text: 'Association non identifiée (ni numéro, ni site officiel)', suspicious: true },
+          { text: 'Collecte d\'espèces en main propre, sans reçu', suspicious: true },
+          { text: '« Faites confiance » à la place de toute preuve', suspicious: true },
+          { text: 'Profite de l\'urgence pour éviter les vérifications', suspicious: true }
         ],
         explanation:
-          'C\'est une fake news ! Un pseudo qui empile « officiel », « real »… est ' +
-          'justement le signe d\'un FAUX compte. Aucun badge de certification, et la ' +
-          'phrase « non officiel mais sûr à 100% » se contredit elle-même. Les vraies ' +
-          'annonces d\'une star passent par son compte certifié.'
-      },
-      {
-        platform: 'youtube',
-        isFake: true,
-        shortLabel: 'Vidéo « scoop »',
-        data: {
-          channel: 'BUZZ PEOPLE TV',
-          subscribers: '890 k abonnés',
-          title: 'Léa Solène AVOUE TOUT en larmes ?! (la vidéo qu\'on veut SUPPRIMER)',
-          views: '1,9 M vues',
-          uploadedAt: 'il y a 1 jour',
-          thumbnailCaption: '🎬 Miniature : visage choqué + flèches rouges + « CHOC »',
-          description:
-            'Selon nos sources exclusives (qu\'on ne peut pas révéler), Léa aurait tout ' +
-            'avoué. La vidéo utilise des extraits sortis de leur contexte et une voix ' +
-            'qui ressemble à la sienne…'
-        },
-        clues: [
-          { text: 'Titre racoleur (« CHOC », « qu\'on veut SUPPRIMER »)', suspicious: true },
-          { text: 'Miniature exagérée typique des chaînes à clics', suspicious: true },
-          { text: '« Sources qu\'on ne peut pas révéler »', suspicious: true },
-          { text: 'Extraits sortis de leur contexte, voix imitée', suspicious: true }
-        ],
-        explanation:
-          'C\'est une fake news ! Titre à clics, miniature exagérée, « sources ' +
-          'secrètes » invérifiables et extraits manipulés : tout est conçu pour faire ' +
-          'cliquer, pas pour informer. Une voix « qui ressemble » peut être imitée ou ' +
-          'générée. Méfie-toi des chaînes qui vivent du buzz.'
-      },
-      {
-        platform: 'twitter',
-        isFake: true,
-        shortLabel: 'Fausse citation',
-        data: {
-          handle: '@news_people_fr',
-          displayName: 'People News',
-          verified: false,
-          time: '23:14 · hier',
-          text:
-            '🚨 CITATION EXCLUSIVE de Léa Solène : « Je déteste mes fans, ils sont ' +
-            'pathétiques. » 😱 Le monde de la musique sous le choc. RT pour qu\'elle ' +
-            's\'excuse !',
-          comments: '12 000',
-          retweets: '34 000',
-          likes: '21 000',
-          views: '5,4 M'
-        },
-        clues: [
-          { text: 'Citation choc sans aucune source ni date d\'interview', suspicious: true },
-          { text: 'Compte non certifié au nom générique', suspicious: true },
-          { text: '« RT pour qu\'elle s\'excuse » — incite au harcèlement', suspicious: true },
-          { text: 'Propos invraisemblables, conçus pour indigner', suspicious: true }
-        ],
-        explanation:
-          'C\'est une fake news ! Une « citation exclusive » sans interview, sans date, ' +
-          'sans média identifié, c\'est presque toujours inventé. Le but est de te ' +
-          'faire réagir sous le coup de la colère et de relayer. C\'est une fausse ' +
-          'citation, une technique très courante.'
+          'C\'est une fake news ! Une vraie association est déclarée, possède un site ' +
+          'officiel et remet un reçu pour tes dons. Demander des espèces en main propre, ' +
+          'sans reçu et « vite », est un signal d\'alarme. La solidarité est précieuse : ' +
+          'ne la confie qu\'à des structures identifiables et transparentes.'
       },
       {
         platform: 'website',
         isFake: true,
         shortLabel: 'Site clone',
         data: {
-          url: 'lemondé-people.com',
-          siteName: 'LE MONDÉ PEOPLE',
-          publishedAt: 'Publié il y a 30 min · Auteur : « La Rédac »',
-          headline: 'Léa Solène hospitalisée d\'urgence : son entourage très inquiet',
+          url: 'croix-rouge-dons-urgence.net',
+          siteName: 'CROIX-ROUGE — DONS URGENCE',
+          publishedAt: 'Publié il y a 2 h · Site non officiel',
+          headline: 'Don d\'urgence inondations : aidez en 1 minute',
           body:
-            'Selon des informations que nous sommes seuls à détenir, la chanteuse ' +
-            'aurait été hospitalisée. Aucun hôpital, aucun proche n\'a confirmé, mais ' +
-            'tout le monde en parle. Cliquez pour voir les photos exclusives !',
-          imageCaption: '📸 Photo d\'ambulance générique (banque d\'images)',
-          shareInfo: '⚠️ Adresse imitant un vrai journal · Aucune confirmation'
+            'Pour faire un don « sécurisé », saisissez tout de suite votre numéro de ' +
+            'carte bancaire, sa date, le code à 3 chiffres ET votre mot de passe ' +
+            'bancaire. Dépêchez-vous, l\'opération expire dans 10 minutes !',
+          imageCaption: '📸 Logo imité d\'une grande association',
+          shareInfo: '⚠️ Adresse qui imite le vrai site · Demande des codes secrets'
         },
         clues: [
-          { text: 'Adresse qui imite un vrai média (« lemondé » avec accent)', suspicious: true },
-          { text: 'Auteur anonyme (« La Rédac »)', suspicious: true },
-          { text: '« Nous sommes seuls à détenir » + aucune confirmation', suspicious: true },
-          { text: 'Photo générique sans rapport, appât à clics', suspicious: true }
+          { text: 'Adresse qui imite la vraie (…-dons-urgence.net)', suspicious: true },
+          { text: 'Demande le mot de passe bancaire : jamais légitime', suspicious: true },
+          { text: 'Minuteur « expire dans 10 minutes » — pression', suspicious: true },
+          { text: 'Logo copié pour paraître officiel', suspicious: true }
         ],
         explanation:
-          'C\'est une fake news ! C\'est un site « clone » : son adresse imite celle ' +
-          'd\'un vrai journal pour tromper. Aucune source ne confirme, l\'auteur est ' +
-          'anonyme et la photo vient d\'une banque d\'images. Vérifie toujours ' +
-          'l\'adresse exacte du site (l\'orthographe du nom de domaine).'
+          'C\'est une fake news (et de l\'hameçonnage) ! C\'est un site « clone » qui imite ' +
+          'une vraie association pour voler tes données bancaires. Aucun site sérieux ne ' +
+          'demande ton mot de passe bancaire ni ne te met un minuteur. Pour donner, va ' +
+          'toi-même sur le site officiel exact de l\'association.'
       },
       {
-        platform: 'instagram',
+        platform: 'twitter',
         isFake: false,
-        shortLabel: 'Compte certifié',
+        shortLabel: '@CroixRouge',
         data: {
-          handle: '@leasolene',
-          displayName: 'Léa Solène',
+          handle: '@CroixRouge',
+          displayName: 'Croix-Rouge française',
           verified: true,
-          imageCaption: '🖼️ Photo nette de Léa en studio, postée par elle-même',
-          caption:
-            'Coucou tout le monde 💙 Je vais très bien ! J\'ignore ces fausses rumeurs. ' +
-            'Mon nouvel album sort le 14 juin, je vous prépare une surprise. Prenez ' +
-            'soin de vous et vérifiez vos sources 😉',
-          likes: '2,4 M',
-          comments: '180 000',
-          time: 'il y a 1 h'
+          time: '10:20 · Aujourd\'hui',
+          text:
+            '🔴 Inondations : nos équipes sont sur le terrain. Pour aider, deux moyens ' +
+            'sûrs : faire un don sur notre site officiel croix-rouge.fr, ou devenir ' +
+            'bénévole près de chez vous. Merci pour votre solidarité 🤝',
+          comments: '540',
+          retweets: '4 800',
+          likes: '19 000',
+          views: '2,3 M'
         },
         clues: [
-          { text: 'Compte certifié (badge bleu) de l\'artiste', suspicious: false },
-          { text: 'Message direct, calme, qui dément les rumeurs', suspicious: false },
-          { text: 'Information concrète et vérifiable (date d\'album)', suspicious: false },
-          { text: 'Invite justement à vérifier ses sources', suspicious: false }
+          { text: 'Compte officiel et certifié d\'une association reconnue', suspicious: false },
+          { text: 'Renvoie vers le site officiel exact (croix-rouge.fr)', suspicious: false },
+          { text: 'Propose des moyens concrets : don sécurisé, bénévolat', suspicious: false },
+          { text: 'Ton mesuré, remercie sans culpabiliser ni presser', suspicious: false }
         ],
         explanation:
-          'C\'est une vraie info ! C\'est le compte officiel et certifié de l\'artiste ' +
-          'elle-même. Elle dément calmement, donne une info concrète et vérifiable ' +
-          '(la date de son album) et encourage à vérifier les sources. Quand une star ' +
-          's\'exprime, fie-toi à son compte certifié, pas aux rumeurs.'
+          'C\'est une vraie info ! C\'est le compte officiel et certifié d\'une grande ' +
+          'association. Elle propose des moyens d\'aider clairs et sûrs (don sur le site ' +
+          'officiel, bénévolat) sans pression ni culpabilité. C\'est ça, la vraie force ' +
+          'de l\'entraide : une solidarité organisée, transparente et vérifiable, où ' +
+          'chacun peut agir en confiance.'
       }
     ]
   },
 
   /* ════════════════════════════════════════════════════════════════════
-     AFFAIRE 4 — LE REMÈDE MIRACLE   (Difficile · 3 vrai / 2 fake)
+     AFFAIRE 4 — LE REMÈDE MIRACLE   (Difficile · 4 vrai / 1 fake)
      ════════════════════════════════════════════════════════════════════ */
   {
     id: 'sante',
@@ -464,32 +470,34 @@ const LEVELS = [
     sources: [
       {
         platform: 'tiktok',
-        isFake: true,
-        shortLabel: '@docteur_secret',
+        isFake: false,
+        shortLabel: '@dr.lina.sante',
         data: {
-          handle: '@docteur_secret',
-          displayName: 'Le Docteur Que La Médecine Cache 🤫',
-          followers: '670 k',
-          videoCaption: 'Un homme en blouse blanche mélange du citron et du bicarbonate',
+          handle: '@dr.lina.sante',
+          displayName: 'Dr Lina · Médecin ✔ (compte certifié)',
+          followers: '540 k',
+          videoCaption: 'Une médecin en blouse explique calmement, ses sources affichées à l\'écran',
           caption:
-            'Buvez CECI chaque matin et vous ne serez PLUS JAMAIS malade ! Les médecins ' +
-            'ne veulent pas que vous le sachiez 💊🚫 #santé #remedenaturel',
-          sound: '🎵 musique angoissante',
-          likes: '980 k',
-          comments: '45 000',
-          shares: '320 000'
+            'Non, aucun aliment ne « soigne » le rhume 🙂 Le mieux : repos, hydratation ' +
+            'et se laver les mains. Les antibiotiques sont inutiles contre un virus. ' +
+            'Sources officielles en commentaire (ameli.fr). #santé #médecine',
+          sound: '🎵 son original',
+          likes: '210 k',
+          comments: '6 800',
+          shares: '34 000'
         },
         clues: [
-          { text: '« Plus JAMAIS malade » — promesse impossible', suspicious: true },
-          { text: '« Les médecins vous cachent ça » — complot', suspicious: true },
-          { text: 'Aucun diplôme ni étude scientifique montré', suspicious: true },
-          { text: 'Vend une recette miracle universelle', suspicious: true }
+          { text: 'Compte certifié d\'une professionnelle de santé', suspicious: false },
+          { text: 'Aucune promesse miracle, conseils prudents', suspicious: false },
+          { text: 'Cite ses sources officielles (ameli.fr)', suspicious: false },
+          { text: 'Explique simplement, sans chercher à faire peur', suspicious: false }
         ],
         explanation:
-          'C\'est une fake news ! Aucun aliment ne rend « plus jamais malade » : c\'est ' +
-          'une promesse impossible. Le « les médecins vous cachent ça » est un ' +
-          'classique du complot santé. Une vraie information médicale s\'appuie sur des ' +
-          'études, pas sur une recette secrète vendue sur TikTok.'
+          'C\'est une vraie info ! Même sur TikTok, une information peut être fiable : ' +
+          'ici, c\'est une médecin sur un compte certifié, qui ne promet aucun miracle, ' +
+          'donne des conseils prudents et cite ses sources officielles. La plateforme ne ' +
+          'fait pas la fiabilité : ce sont la source, les preuves et le ton mesuré qui ' +
+          'comptent.'
       },
       {
         platform: 'website',

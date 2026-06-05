@@ -26,6 +26,7 @@
     level: null,      // affaire en cours
     source: null,     // source en cours d'analyse
     answered: [],     // index des sources déjà traitées
+    given: {},        // index → verdict donné ('real' | 'fake'), pour la relecture
     score: 0,         // bonnes réponses de l'affaire en cours
     misses: []        // sources sur lesquelles le joueur s'est trompé (les "pièges")
   };
@@ -161,6 +162,7 @@
     state.level = window.LEVELS.find((l) => l.id === levelId);
     state.source = null;
     state.answered = [];
+    state.given = {};
     state.score = 0;
     state.misses = [];
 
@@ -199,13 +201,16 @@
 
       const card = document.createElement('div');
       card.className = 'device-card' + (isActive ? ' active' : '') + (isDone ? ' done' : '');
+      // Une source déjà traitée reste consultable (relecture seule, choix figé).
+      card.title = isDone ? 'Revoir cette source' : '';
       card.innerHTML = `
         <span class="device-emoji">${meta.icon}</span>
         <div class="device-name">${escapeHtml(meta.label)}</div>
         <div class="device-source">${escapeHtml(s.shortLabel)}</div>
         ${isDone ? '<div class="done-badge">✓</div>' : ''}
       `;
-      if (!isDone) card.addEventListener('click', () => openSource(i));
+      // Toutes les cartes sont cliquables : non traitée → on répond ; traitée → on revoit.
+      card.addEventListener('click', () => openSource(i));
       sidebar.appendChild(card);
     });
   }
@@ -218,35 +223,60 @@
     renderDevices();
     renderDots();
 
-    const cluesHtml = source.clues
-      .map(
-        (c) =>
-          `<span class="clue-tag ${c.suspicious ? 'suspicious' : 'ok'}">` +
-          `${c.suspicious ? '🚩' : '✅'} ${escapeHtml(c.text)}</span>`
-      )
-      .join('');
-
-    $('source-content').innerHTML = `
-      ${window.renderSource(source)}
-      <div class="indices-section" id="indices-section">
-        <div class="indices-label">🔎 Indices à analyser</div>
-        <div class="clues-strip">${cluesHtml}</div>
-      </div>
-    `;
+    // Rendu de la source seule : aucun indice, aucune explication n'est montré.
+    $('source-content').innerHTML = window.renderSource(source);
 
     $('welcome-state').style.display = 'none';
     $('source-content').style.display = 'block';
     $('verdict-zone').className = 'verdict-zone visible';
-    $('result-banner').style.display = 'none';
 
-    $('btn-real').disabled = false;
-    $('btn-fake').disabled = false;
-    $('btn-real').className = 'verdict-btn real';
-    $('btn-fake').className = 'verdict-btn fake';
+    if (state.answered.includes(idx)) {
+      // Source déjà traitée : relecture seule, le choix ne peut plus changer.
+      showResult(source, state.given[idx], true);
+    } else {
+      $('result-banner').style.display = 'none';
+      $('btn-real').disabled = false;
+      $('btn-fake').disabled = false;
+      $('btn-real').className = 'verdict-btn real';
+      $('btn-fake').className = 'verdict-btn fake';
+    }
+  }
+
+  // Affiche le bandeau de résultat : juste « juste/faux », sans aucune explication.
+  // En relecture (review = true), on n'affiche pas le bouton « source suivante ».
+  function showResult(source, verdict, review) {
+    const isCorrect = (verdict === 'fake') === source.isFake;
+
+    $('btn-real').disabled = true;
+    $('btn-fake').disabled = true;
+    $('btn-real').className = 'verdict-btn real' + (verdict === 'real' ? ' selected-real' : '');
+    $('btn-fake').className = 'verdict-btn fake' + (verdict === 'fake' ? ' selected-fake' : '');
+
+    const banner = $('result-banner');
+    banner.style.display = 'block';
+    banner.className = 'result-banner ' + (isCorrect ? 'correct' : 'wrong');
+
+    $('result-title').textContent = isCorrect ? '✅ Bonne réponse !' : '❌ Mauvaise réponse';
+    // Plus aucune indication du « pourquoi » : on ne montre que juste/faux.
+    $('result-explanation').textContent = '';
+    $('result-explanation').style.display = 'none';
+
+    const nextBtn = $('next-btn');
+    if (review) {
+      nextBtn.style.display = 'none';
+    } else {
+      nextBtn.style.display = '';
+      nextBtn.textContent =
+        state.answered.length >= state.level.sources.length
+          ? 'Voir mon résultat final →'
+          : 'Source suivante →';
+    }
   }
 
   function submitVerdict(verdict) {
     if (!state.source) return;
+    // Une source déjà traitée est en relecture seule : on ne peut plus répondre.
+    if (state.answered.includes(state.source._index)) return;
 
     const isCorrect = (verdict === 'fake') === state.source.isFake;
     if (isCorrect) {
@@ -256,30 +286,10 @@
       state.misses.push({ source: state.source, given: verdict });
     }
     state.answered.push(state.source._index);
+    state.given[state.source._index] = verdict;
     $('score').textContent = state.score;
 
-    $('btn-real').disabled = true;
-    $('btn-fake').disabled = true;
-    if (verdict === 'real') $('btn-real').className = 'verdict-btn real selected-real';
-    if (verdict === 'fake') $('btn-fake').className = 'verdict-btn fake selected-fake';
-
-    const indices = $('indices-section');
-    if (indices) indices.classList.add('revealed');
-
-    const banner = $('result-banner');
-    banner.style.display = 'block';
-    banner.className = 'result-banner ' + (isCorrect ? 'correct' : 'wrong');
-
-    $('result-title').textContent = isCorrect
-      ? (state.source.isFake ? '🎯 Bien vu ! C\'est une fake news !' : '🎯 Exact ! C\'est une vraie info !')
-      : (state.source.isFake ? '❌ Raté ! C\'était une fake news…' : '❌ Raté ! C\'était une vraie info…');
-
-    $('result-explanation').textContent = state.source.explanation;
-
-    $('next-btn').textContent =
-      state.answered.length >= state.level.sources.length
-        ? 'Voir mon résultat final →'
-        : 'Source suivante →';
+    showResult(state.source, verdict, false);
 
     renderDevices();
     renderDots();
@@ -339,17 +349,16 @@
     } else if (ratio >= 0.7) {
       icon = '🎖️';
       title = 'Excellente enquête';
-      msg = 'Tu as l\'œil pour repérer les fausses infos. Relis le récapitulatif ' +
-            'ci-dessous pour viser le sans-faute.';
+      msg = 'Tu as l\'œil pour repérer les fausses infos. Encore un petit effort pour ' +
+            'viser le sans-faute !';
     } else if (ratio >= 0.4) {
       icon = '🔍';
       title = 'Sur la bonne piste';
-      msg = 'Pas mal ! Souviens-toi des réflexes : vérifier la source, l\'auteur, ' +
-            'les preuves, et se méfier de l\'urgence et des promesses trop belles.';
+      msg = 'Pas mal ! Continue à t\'entraîner pour démêler le vrai du faux.';
     } else {
       icon = '📚';
       title = 'À l\'entraînement, détective !';
-      msg = 'Les intox sont rusées. Étudie bien le récapitulatif des pièges ci-dessous.';
+      msg = 'Les intox sont rusées. Rejoue pour améliorer ton score.';
     }
 
     $('final-icon').textContent = icon;
@@ -389,9 +398,8 @@
     $('bilan-msg').textContent = missed === 0
       ? 'Sans-faute absolu sur l\'ensemble des affaires ! Tu es un véritable détective ' +
         'de l\'information : aucune intox ne t\'a échappé.'
-      : `Tu as résolu toutes les affaires. ${missed} source${missed > 1 ? 's' : ''} ` +
-        `t'${missed > 1 ? 'ont' : 'a'} piégé en chemin : voici les points à retenir ` +
-        'pour ne plus jamais te faire avoir.';
+      : `Tu as résolu toutes les affaires. ${missed} réponse${missed > 1 ? 's' : ''} ` +
+        `manquée${missed > 1 ? 's' : ''} en chemin : les voici ci-dessous.`;
 
     renderBilanRecap(traps);
     showScreen('complete');
@@ -410,31 +418,22 @@
     const items = traps
       .map((t) => {
         const meta = window.PLATFORM_META[t.platform] || { icon: '❓', label: t.platform };
-        const verdictLabel = t.isFake
-          ? 'C\'était une FAKE NEWS — prise pour une vraie info.'
-          : 'C\'était une VRAIE INFO — prise pour une fake news.';
-        const tag = t.isFake ? '⚠️ À méfier' : '✅ Source fiable';
-        const cluesHtml = (t.clues || []).map((c) => `<li>${escapeHtml(c)}</li>`).join('');
+        const verdictLabel = t.isFake ? 'C\'était une fake news.' : 'C\'était une vraie info.';
 
         return `
           <div class="recap-item ${t.isFake ? 'is-fake' : 'is-real'}">
             <div class="recap-head">
               <span class="recap-icon">${meta.icon}</span>
               <span class="recap-source">${escapeHtml(meta.label)} · ${escapeHtml(t.shortLabel)}</span>
-              <span class="recap-tag">${tag}</span>
             </div>
             <div class="recap-affaire">Affaire n°${t.levelNumber} — ${escapeHtml(t.levelTitle)}</div>
             <div class="recap-verdict">${verdictLabel}</div>
-            <ul class="recap-clues">${cluesHtml}</ul>
-            <div class="recap-why">${escapeHtml(t.explanation)}</div>
           </div>`;
       })
       .join('');
 
     box.innerHTML =
-      '<div class="recap-title">🎯 Les pièges qui ont affaibli ton score</div>' +
-      '<div class="recap-sub">Méfie-toi de ces types de sources et de leurs signaux :</div>' +
-      items;
+      '<div class="recap-title">🎯 Réponses manquées</div>' + items;
   }
 
   // Récapitulatif des sources qui ont piégé le joueur (réponses fausses).
@@ -443,42 +442,28 @@
 
     if (!state.misses.length) {
       box.innerHTML =
-        '<div class="recap-clean">🎉 Aucune source ne t\'a piégé sur cette affaire : ' +
-        'tu as déjoué tous les contenus !</div>';
+        '<div class="recap-clean">🎉 Sans-faute sur cette affaire : aucune erreur !</div>';
       return;
     }
 
     const items = state.misses
       .map(({ source }) => {
         const meta = window.PLATFORM_META[source.platform] || { icon: '❓', label: source.platform };
-        const verdictLabel = source.isFake
-          ? 'C\'était une FAKE NEWS — tu l\'as prise pour une vraie info.'
-          : 'C\'était une VRAIE INFO — tu l\'as prise pour une fake news.';
-        const tag = source.isFake ? '⚠️ À méfier' : '✅ Source fiable';
-
-        // Pour une fake : on rappelle les signaux suspects.
-        // Pour une vraie info crue fausse : on rappelle les gages de fiabilité.
-        const cluesToShow = source.clues.filter((c) => c.suspicious === source.isFake);
-        const cluesHtml = cluesToShow.map((c) => `<li>${escapeHtml(c.text)}</li>`).join('');
+        const verdictLabel = source.isFake ? 'C\'était une fake news.' : 'C\'était une vraie info.';
 
         return `
           <div class="recap-item ${source.isFake ? 'is-fake' : 'is-real'}">
             <div class="recap-head">
               <span class="recap-icon">${meta.icon}</span>
               <span class="recap-source">${escapeHtml(meta.label)} · ${escapeHtml(source.shortLabel)}</span>
-              <span class="recap-tag">${tag}</span>
             </div>
             <div class="recap-verdict">${verdictLabel}</div>
-            <ul class="recap-clues">${cluesHtml}</ul>
-            <div class="recap-why">${escapeHtml(source.explanation)}</div>
           </div>`;
       })
       .join('');
 
     box.innerHTML =
-      '<div class="recap-title">🔎 À retenir : les sources qui t\'ont piégé</div>' +
-      '<div class="recap-sub">Ces contenus t\'ont trompé. Apprends à reconnaître leurs signaux :</div>' +
-      items;
+      '<div class="recap-title">🔎 Réponses manquées</div>' + items;
   }
 
   /* ════════════════ INITIALISATION ════════════════ */

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Espace professeur — Corrigé des enquêtes | Bureau d'Enquête Numérique</title>
+  <meta name="description" content="Fiche pédagogique : pour chaque enquête, le détail de chaque média et l'explication de pourquoi c'est une fake news ou une vraie info.">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- On réutilise les feuilles de style du jeu pour rester cohérent -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/platforms.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- Styles propres à la fiche pédagogique : écran fixe, sans scroll global -->
+  <style>
+    /* Écran plein, aucun défilement de la page : seuls les panneaux scrollent. */
+    html, body { height: 100%; overflow: hidden; }
+    .infos-app {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 16px 14px;
+      gap: 10px;
+    }
+
+    /* Barre du haut (titre + retour) */
+    .infos-topbar {
+      flex: 0 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .infos-topbar .title {
+      font-family: 'Special Elite', serif; color: var(--gold);
+      font-size: clamp(14px, 2vw, 18px); letter-spacing: 1px;
+    }
+
+    /* Grille principale : Enquêtes | Médias | Détail */
+    .infos-main {
+      flex: 1 1 auto;
+      display: grid;
+      grid-template-columns: 220px 240px 1fr;
+      gap: 12px;
+      min-height: 0; /* indispensable pour autoriser le scroll interne des colonnes */
+    }
+
+    .infos-col {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--wood-grain);
+      border-radius: 12px;
+      padding: 12px;
+      overflow-y: auto;
+      min-height: 0;
+    }
+    .infos-col-detail { background: var(--paper); color: var(--ink); padding: 0; }
+    #detail-content { max-width: 680px; min-height: 100%; margin: 0 auto; padding: 24px 26px 30px; }
+
+    .infos-col-label {
+      font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--gold-dim); margin-bottom: 10px; position: sticky; top: 0;
+    }
+    .infos-col-detail .infos-col-label { color: var(--muted); background: var(--paper); padding-bottom: 4px; }
+
+    /* Éléments de navigation (enquête ou média) */
+    .nav-item {
+      display: flex; gap: 9px; align-items: flex-start;
+      width: 100%; text-align: left;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--wood-grain);
+      border-radius: 9px; padding: 10px 11px; margin-bottom: 8px;
+      cursor: pointer; color: var(--paper);
+      font-family: 'Nunito', sans-serif; transition: all 0.15s;
+    }
+    .nav-item:hover { border-color: var(--gold); background: rgba(245,200,66,0.07); }
+    .nav-item.active { border-color: var(--gold); background: rgba(245,200,66,0.13); box-shadow: 0 0 0 2px rgba(245,200,66,0.15); }
+    .nav-emoji { font-size: 22px; line-height: 1; flex: 0 0 auto; }
+    .nav-texts { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .nav-kicker { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dim); }
+    .nav-title { font-size: 12.5px; font-weight: 800; color: var(--gold); line-height: 1.25; }
+    .nav-sub { font-size: 10.5px; color: var(--muted); line-height: 1.3; }
+
+    /* Mini-badge de verdict dans la liste des médias */
+    .nav-badge {
+      margin-left: auto; flex: 0 0 auto;
+      font-size: 9px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 12px; white-space: nowrap;
+    }
+    .badge-fake { background: #fde8e6; color: var(--red-alert); border: 1px solid rgba(192,57,43,0.3); }
+    .badge-real { background: #e6f4ec; color: var(--green-ok); border: 1px solid rgba(30,126,74,0.3); }
+
+    /* Invite quand rien n'est sélectionné */
+    .infos-hint {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; text-align: center; gap: 10px; color: var(--muted); padding: 20px;
+    }
+    .infos-col-detail .infos-hint { color: var(--muted); }
+    .infos-hint .big { font-size: 44px; }
+    .infos-hint .txt { font-size: 13px; line-height: 1.6; max-width: 320px; }
+
+    /* Vue d'ensemble d'une affaire (dans le panneau détail, avant choix d'un média) */
+    .ov-emoji { font-size: 40px; }
+    .ov-title { font-family: 'Special Elite', serif; font-size: 20px; color: var(--ink); margin: 6px 0 2px; }
+    .ov-theme { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+    .ov-mission {
+      background: #faf6ea; border-left: 5px solid var(--red-alert); border-radius: 3px;
+      padding: 12px 14px; font-size: 13px; color: var(--ink-mid); line-height: 1.6;
+    }
+    .ov-mission .lbl { display: block; font-size: 9px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--red-alert); margin-bottom: 5px; }
+    .ov-ratio { font-size: 11px; color: var(--muted); margin-top: 12px; font-weight: 700; }
+
+    /* ── Panneau détail : présentation soignée des infos ── */
+
+    /* Fil d'Ariane du média (plateforme · source) */
+    .detail-eyebrow {
+      display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+      font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 14px;
+    }
+    .detail-eyebrow .dot { color: var(--gold-dim); }
+
+    /* Bandeau de verdict, bien visible */
+    .verdict-banner {
+      display: flex; align-items: center; gap: 13px;
+      border-radius: 12px; padding: 13px 18px; margin-bottom: 22px;
+      border: 1px solid;
+    }
+    .verdict-banner .vb-icon { font-size: 26px; line-height: 1; }
+    .verdict-banner .vb-text { display: flex; flex-direction: column; gap: 1px; }
+    .verdict-banner .vb-kicker { font-size: 9px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; }
+    .verdict-banner .vb-main { font-family: 'Special Elite', serif; font-size: 17px; letter-spacing: 0.5px; }
+    .verdict-banner.is-fake { background: #fdecea; color: var(--red-alert); border-color: rgba(192,57,43,0.28); }
+    .verdict-banner.is-real { background: #e9f6ef; color: var(--green-ok); border-color: rgba(30,126,74,0.28); }
+
+    /* Cadre discret autour du média rendu */
+    .detail-media {
+      display: flex; justify-content: center;
+      padding: 18px; margin-bottom: 4px;
+      background: #ece4d1; border: 1px solid #ddd2b6; border-radius: 14px;
+    }
+
+    /* Sections (Indices / Pourquoi) avec titre souligné */
+    .detail-section { margin-top: 24px; }
+    .detail-block-label {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--ink); margin-bottom: 11px;
+      padding-bottom: 7px; border-bottom: 2px solid rgba(74,48,32,0.12);
+    }
+
+    /* Indices présentés en lignes lisibles et colorées */
+    .indices-list { display: flex; flex-direction: column; gap: 8px; }
+    .index-row {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 13px; line-height: 1.55; font-weight: 600;
+      padding: 10px 13px; border-radius: 9px; border: 1px solid transparent;
+    }
+    .index-row .ic { flex: 0 0 auto; font-size: 14px; margin-top: 1px; }
+    .index-row.suspicious { background: #fdecea; color: #8a2a1e; border-color: rgba(192,57,43,0.18); }
+    .index-row.ok { background: #e9f6ef; color: #14613a; border-color: rgba(30,126,74,0.18); }
+
+    /* Explication pédagogique */
+    .detail-why {
+      font-size: 14px; color: var(--ink-mid); line-height: 1.8;
+      background: #faf6ea; border-radius: 12px; padding: 16px 20px;
+      border-left: 4px solid var(--gold-dim);
+    }
+
+    /* Sur petit écran : on autorise le défilement de la page (la contrainte
+       "sans scroll" vise l'usage sur ordinateur). */
+    @media (max-width: 820px) {
+      html, body { overflow: auto; }
+      .infos-app { height: auto; min-height: 100vh; }
+      .infos-main { grid-template-columns: 1fr; }
+      .infos-col { overflow: visible; max-height: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="infos-app">
+
+    <div class="infos-topbar">
+      <a class="ghost-btn" href="/">← Retour au jeu</a>
+      <div class="title">👩‍🏫 Espace professeur — Corrigé des enquêtes</div>
+    </div>
+
+    <div class="infos-main">
+      <!-- Colonne 1 : les enquêtes -->
+      <nav class="infos-col" id="col-enquetes" aria-label="Enquêtes">
+        <div class="infos-col-label">📂 Enquêtes</div>
+        <div id="enquetes-list"></div>
+      </nav>
+
+      <!-- Colonne 2 : les médias de l'enquête choisie -->
+      <nav class="infos-col" id="col-medias" aria-label="Médias">
+        <div class="infos-col-label">🗂️ Médias</div>
+        <div id="medias-list"></div>
+      </nav>
+
+      <!-- Colonne 3 : le média + ses infos -->
+      <section class="infos-col infos-col-detail" id="col-detail" aria-label="Détail">
+        <div id="detail-content"></div>
+      </section>
+    </div>
+
+  </div>
+
+  <!-- Données + moteur de rendu des médias, puis logique de navigation -->
+  <script src="js/levels.js"></script>
+  <script src="js/platforms.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var esc = window.escapeHtml;
+      var meta = window.PLATFORM_META;
+
+      var enquetesList = document.getElementById('enquetes-list');
+      var mediasList = document.getElementById('medias-list');
+      var detail = document.getElementById('detail-content');
+
+      var selectedLevel = null; // affaire en cours
+
+      function stars(n) { return '★'.repeat(n) + '☆'.repeat(5 - n); }
+
+      function hint(big, txt) {
+        return '<div class="infos-hint"><div class="big">' + big + '</div>' +
+          '<div class="txt">' + txt + '</div></div>';
+      }
+
+      // ── Colonne 1 : liste des enquêtes ──
+      function renderEnquetes() {
+        enquetesList.innerHTML = window.LEVELS.map(function (level) {
+          return '' +
+            '<button type="button" class="nav-item" data-id="' + level.id + '">' +
+              '<span class="nav-emoji">' + level.emoji + '</span>' +
+              '<span class="nav-texts">' +
+                '<span class="nav-kicker">Affaire n°' + level.number + '</span>' +
+                '<span class="nav-title">' + esc(level.title) + '</span>' +
+                '<span class="nav-sub">' + stars(level.difficulty) + '</span>' +
+              '</span>' +
+            '</button>';
+        }).join('');
+
+        Array.prototype.forEach.call(enquetesList.querySelectorAll('.nav-item'), function (btn) {
+          btn.addEventListener('click', function () { selectLevel(btn.getAttribute('data-id')); });
+        });
+      }
+
+      // ── Sélection d'une enquête → colonne 2 + vue d'ensemble ──
+      function selectLevel(id) {
+        selectedLevel = window.LEVELS.find(function (l) { return l.id === id; });
+
+        Array.prototype.forEach.call(enquetesList.querySelectorAll('.nav-item'), function (btn) {
+          btn.classList.toggle('active', btn.getAttribute('data-id') === id);
+        });
+
+        renderMedias();
+        renderOverview();
+      }
+
+      // ── Colonne 2 : médias de l'enquête choisie ──
+      function renderMedias() {
+        mediasList.innerHTML = selectedLevel.sources.map(function (source, i) {
+          var m = meta[source.platform] || { icon: '❓', label: source.platform };
+          var badge = source.isFake
+            ? '<span class="nav-badge badge-fake">Fake</span>'
+            : '<span class="nav-badge badge-real">Vraie</span>';
+          return '' +
+            '<button type="button" class="nav-item" data-idx="' + i + '">' +
+              '<span class="nav-emoji">' + m.icon + '</span>' +
+              '<span class="nav-texts">' +
+                '<span class="nav-kicker">Média ' + (i + 1) + ' · ' + esc(m.label) + '</span>' +
+                '<span class="nav-sub">' + esc(source.shortLabel) + '</span>' +
+              '</span>' +
+              badge +
+            '</button>';
+        }).join('');
+
+        Array.prototype.forEach.call(mediasList.querySelectorAll('.nav-item'), function (btn) {
+          btn.addEventListener('click', function () { selectMedia(parseInt(btn.getAttribute('data-idx'), 10)); });
+        });
+      }
+
+      // ── Panneau détail : vue d'ensemble de l'affaire (avant choix d'un média) ──
+      function renderOverview() {
+        var fakeCount = selectedLevel.sources.filter(function (s) { return s.isFake; }).length;
+        var realCount = selectedLevel.sources.length - fakeCount;
+
+        detail.innerHTML = '' +
+          '<div class="ov-emoji">' + selectedLevel.emoji + '</div>' +
+          '<div class="nav-kicker" style="color:var(--gold-dim)">Affaire n°' + selectedLevel.number +
+            ' · ' + stars(selectedLevel.difficulty) + '</div>' +
+          '<h2 class="ov-title">' + esc(selectedLevel.title) + '</h2>' +
+          '<div class="ov-theme">' + esc(selectedLevel.theme) + '</div>' +
+          '<div class="ov-mission"><span class="lbl">⚠ Mission présentée à l\'élève</span>' +
+            esc(selectedLevel.mission) + '</div>' +
+          '<div class="ov-ratio">' + realCount + ' vraie' + (realCount > 1 ? 's' : '') +
+            ' / ' + fakeCount + ' fausse' + (fakeCount > 1 ? 's' : '') +
+            ' · 👉 choisis un média dans la colonne du milieu</div>';
+      }
+
+      // ── Panneau détail : un média + sa correction ──
+      function selectMedia(idx) {
+        var source = selectedLevel.sources[idx];
+        var m = meta[source.platform] || { icon: '❓', label: source.platform };
+
+        Array.prototype.forEach.call(mediasList.querySelectorAll('.nav-item'), function (btn) {
+          btn.classList.toggle('active', parseInt(btn.getAttribute('data-idx'), 10) === idx);
+        });
+
+        var cluesHtml = source.clues.map(function (c) {
+          return '<div class="index-row ' + (c.suspicious ? 'suspicious' : 'ok') + '">' +
+            '<span class="ic">' + (c.suspicious ? '🚩' : '✅') + '</span>' +
+            '<span>' + esc(c.text) + '</span>' +
+          '</div>';
+        }).join('');
+
+        detail.innerHTML = '' +
+          '<div class="detail-eyebrow">' +
+            '<span>' + m.icon + '</span><span>' + esc(m.label) + '</span>' +
+            '<span class="dot">·</span><span>' + esc(source.shortLabel) + '</span>' +
+          '</div>' +
+          '<div class="verdict-banner ' + (source.isFake ? 'is-fake' : 'is-real') + '">' +
+            '<span class="vb-icon">' + (source.isFake ? '🚩' : '✅') + '</span>' +
+            '<span class="vb-text">' +
+              '<span class="vb-kicker">Verdict</span>' +
+              '<span class="vb-main">' + (source.isFake ? 'Fake news' : 'Vraie info') + '</span>' +
+            '</span>' +
+          '</div>' +
+          '<div class="detail-media">' + window.renderSource(source) + '</div>' +
+          '<div class="detail-section">' +
+            '<div class="detail-block-label">🔎 Indices à repérer</div>' +
+            '<div class="indices-list">' + cluesHtml + '</div>' +
+          '</div>' +
+          '<div class="detail-section">' +
+            '<div class="detail-block-label">🧑‍🏫 Pourquoi&nbsp;?</div>' +
+            '<div class="detail-why">' + esc(source.explanation) + '</div>' +
+          '</div>';
+
+        // On revient en haut du panneau détail à chaque changement de média.
+        document.getElementById('col-detail').scrollTop = 0;
+      }
+
+      // ── Init ──
+      renderEnquetes();
+      mediasList.innerHTML = hint('🗂️', 'Choisis une enquête à gauche pour voir ses médias.');
+      detail.innerHTML = hint('🕵️', 'Sélectionne une enquête puis un média pour afficher le contenu et son corrigé.');
+    })();
+  </script>
+</body>
+</html>

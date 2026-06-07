@@ -10,6 +10,11 @@ const PORT = process.env.PORT || 3000; // Render fournit le port via la variable
 // Sert tous les fichiers du dossier public/ (index.html, css/, js/...).
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Page enseignant : /infos → public/infos.html (corrigé complet des enquêtes).
+app.get('/infos', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'infos.html'));
+});
+
 // Repli : toute route inconnue renvoie l'index.
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

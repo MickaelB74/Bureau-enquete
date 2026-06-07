@@ -232,7 +232,7 @@
 
     if (state.answered.includes(idx)) {
       // Source déjà traitée : relecture seule, le choix ne peut plus changer.
-      showResult(source, state.given[idx], true);
+      showResult(source, state.given[idx]);
     } else {
       $('result-banner').style.display = 'none';
       $('btn-real').disabled = false;
@@ -243,8 +243,10 @@
   }
 
   // Affiche le bandeau de résultat : juste « juste/faux », sans aucune explication.
-  // En relecture (review = true), on n'affiche pas le bouton « source suivante ».
-  function showResult(source, verdict, review) {
+  // Le bouton d'avancement reste toujours visible (relecture comprise) :
+  //   - tant qu'il reste des sources à traiter → « Source suivante »
+  //   - une fois toutes les sources traitées   → « Voir mon résultat final »
+  function showResult(source, verdict) {
     const isCorrect = (verdict === 'fake') === source.isFake;
 
     $('btn-real').disabled = true;
@@ -261,16 +263,10 @@
     $('result-explanation').textContent = '';
     $('result-explanation').style.display = 'none';
 
+    const allDone = state.answered.length >= state.level.sources.length;
     const nextBtn = $('next-btn');
-    if (review) {
-      nextBtn.style.display = 'none';
-    } else {
-      nextBtn.style.display = '';
-      nextBtn.textContent =
-        state.answered.length >= state.level.sources.length
-          ? 'Voir mon résultat final →'
-          : 'Source suivante →';
-    }
+    nextBtn.style.display = '';
+    nextBtn.textContent = allDone ? 'Voir mon résultat final →' : 'Source suivante →';
   }
 
   function submitVerdict(verdict) {
@@ -289,21 +285,25 @@
     state.given[state.source._index] = verdict;
     $('score').textContent = state.score;
 
-    showResult(state.source, verdict, false);
+    showResult(state.source, verdict);
 
     renderDevices();
     renderDots();
   }
 
+  // Bouton d'avancement : ouvre la prochaine source non encore déterminée
+  // (dans l'ordre), ou bascule vers le résultat final s'il n'en reste aucune.
   function nextSource() {
-    if (state.answered.length >= state.level.sources.length) {
+    const total = state.level.sources.length;
+    let nextIdx = -1;
+    for (let i = 0; i < total; i++) {
+      if (!state.answered.includes(i)) { nextIdx = i; break; }
+    }
+    if (nextIdx === -1) {
       showFinal();
       return;
     }
-    state.source = null;
-    resetPanelToWelcome(false);
-    renderDevices();
-    renderDots();
+    openSource(nextIdx);
   }
 
   function resetPanelToWelcome(first) {
